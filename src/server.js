@@ -2,7 +2,8 @@ const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
 //const User = require('./models/User')
-const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./routes/userRoutes'); // Adjusted path for new location
+const swaggerSetup = require('./swagger'); // Adjusted path for new location
 
 app.get('/', (req, res) => {
     res.send('Welcome to BusEke API')
@@ -23,12 +24,15 @@ app.use('/api/users', userRoutes);
 //     }
 // })
 
+swaggerSetup(app);
 
 mongoose.connect('mongodb+srv://admin:admin01@cluster0.4zsmx.mongodb.net/BusEkeDB?retryWrites=true&w=majority&appName=Cluster0')
 .then(() => {
     console.log('successfully connected')
     app.listen(3000, () => {
         console.log('Port is 3000')
+        console.log(`API is running on http://localhost:3000`);
+        console.log(`Swagger Documentataion running on http://localhost:3000/api-docs`);
     });
 }).catch((error) => {
     console.log(error)
