@@ -2,8 +2,9 @@ const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
 //const User = require('./models/User')
-const userRoutes = require('./routes/userRoutes'); // Adjusted path for new location
-const swaggerSetup = require('./swagger'); // Adjusted path for new location
+const userRoutes = require('./routes/userRoutes');
+const routeRoutes = require('./routes/routeRoutes');
+const swaggerSetup = require('./swagger');
 
 app.get('/', (req, res) => {
     res.send('Welcome to BusEke API')
@@ -13,6 +14,7 @@ app.get('/', (req, res) => {
 app.use(express.json());
 
 app.use('/api/users', userRoutes);
+app.use('/api/routes', routeRoutes);
 
 // app.post('/user', async(req, res) => {
 //     try {
