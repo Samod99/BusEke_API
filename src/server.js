@@ -4,6 +4,7 @@ const app = express()
 //const User = require('./models/User')
 const userRoutes = require('./routes/userRoutes');
 const routeRoutes = require('./routes/routeRoutes');
+const busRoutes = require('./routes/busRoutes');
 const swaggerSetup = require('./swagger');
 
 app.get('/', (req, res) => {
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use('/api/users', userRoutes);
 app.use('/api/routes', routeRoutes);
+app.use('/api/buses', busRoutes);
 
 // app.post('/user', async(req, res) => {
 //     try {
