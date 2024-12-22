@@ -1,6 +1,7 @@
 const express = require('express');
 const routeController = require('../controllers/routeController');
 const router = express.Router();
+const { authenticate, authorization } = require('../middleware/authMiddleware');
 
 /**
  * @swagger
@@ -56,6 +57,8 @@ router.get('/', routeController.searchRoutes);
  *   post:
  *     summary: Create a new route
  *     tags: [Routes]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -97,7 +100,7 @@ router.get('/', routeController.searchRoutes);
  *       500:
  *         description: Internal server error
  */
-router.post('/', routeController.createRoute);
+router.post('/', authenticate, authorization(['admin']), routeController.createRoute);
 
 /**
  * @swagger
@@ -128,6 +131,8 @@ router.get('/:routeId', routeController.getRouteById);
  *   put:
  *     summary: Update a route
  *     tags: [Routes]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -166,7 +171,7 @@ router.get('/:routeId', routeController.getRouteById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', routeController.updateRoute);
+router.put('/:id', authenticate, authorization(['admin']), routeController.updateRoute);
 
 /**
  * @swagger
@@ -174,6 +179,8 @@ router.put('/:id', routeController.updateRoute);
  *   delete:
  *     summary: Delete a route
  *     tags: [Routes]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -189,6 +196,6 @@ router.put('/:id', routeController.updateRoute);
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', routeController.deleteRoute);
+router.delete('/:id', authenticate, authorization(['admin']), routeController.deleteRoute);
 
 module.exports = router;

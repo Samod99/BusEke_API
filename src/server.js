@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
@@ -5,6 +6,7 @@ const app = express()
 const userRoutes = require('./routes/userRoutes');
 const routeRoutes = require('./routes/routeRoutes');
 const busRoutes = require('./routes/busRoutes');
+const authRoutes = require('./routes/authRoutes');
 const swaggerSetup = require('./swagger');
 
 app.get('/', (req, res) => {
@@ -17,6 +19,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/routes', routeRoutes);
 app.use('/api/buses', busRoutes);
+app.use('/api/auth', authRoutes);
 
 // app.post('/user', async(req, res) => {
 //     try {
