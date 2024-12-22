@@ -1,6 +1,7 @@
 const express = require('express');
 const busController = require('../controllers/busController');
 const router = express.Router();
+const { authenticate, authorization } = require('../middleware/authMiddleware');
 
 /**
  * @swagger
@@ -15,6 +16,8 @@ const router = express.Router();
  *   post:
  *     summary: Create a new bus
  *     tags: [Buses]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -53,7 +56,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.post('/', busController.createBus);
+router.post('/', authenticate, authorization(['operator']), busController.createBus);
 
 /**
  * @swagger
@@ -130,6 +133,8 @@ router.get('/:busId', busController.getBusById);
  *   put:
  *     summary: Update a bus
  *     tags: [Buses]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -167,7 +172,7 @@ router.get('/:busId', busController.getBusById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', busController.updateBus);
+router.put('/:id', authenticate, authorization(['operator']), busController.updateBus);
 
 /**
  * @swagger
@@ -175,6 +180,8 @@ router.put('/:id', busController.updateBus);
  *   delete:
  *     summary: Delete a bus
  *     tags: [Buses]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -190,6 +197,6 @@ router.put('/:id', busController.updateBus);
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', busController.deleteBus);
+router.delete('/:id', authenticate, authorization(['operator']), busController.deleteBus);
 
 module.exports = router;

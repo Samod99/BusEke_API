@@ -1,6 +1,7 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const router = express.Router();
+const { authenticate, authorization } = require('../middleware/authMiddleware');
 
 /**
  * @swagger
@@ -54,6 +55,8 @@ router.post('/', userController.registerUser);
  *   get:
  *     summary: Search users
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: username
  *         in: query
@@ -89,7 +92,7 @@ router.post('/', userController.registerUser);
  *                   role:
  *                     type: string
  */
-router.get('/', userController.searchUsers);
+router.get('/', authenticate, authorization(['admin']), userController.searchUsers);
 
 /**
  * @swagger
@@ -97,6 +100,8 @@ router.get('/', userController.searchUsers);
  *   get:
  *     summary: Get a user by ID
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: userId
  *         in: path
@@ -110,7 +115,7 @@ router.get('/', userController.searchUsers);
  *       404:
  *         description: User not found
  */
-router.get('/:userId', userController.getUserById);
+router.get('/:userId', authenticate, authorization(['admin']), userController.getUserById);
 
 /**
  * @swagger
@@ -118,6 +123,8 @@ router.get('/:userId', userController.getUserById);
  *   put:
  *     summary: Update a user
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -144,7 +151,7 @@ router.get('/:userId', userController.getUserById);
  *       404:
  *         description: User not found
  */
-router.put('/:id', userController.updateUser);
+router.put('/:id', authenticate, authorization(['admin']), userController.updateUser);
 
 /**
  * @swagger
@@ -152,6 +159,8 @@ router.put('/:id', userController.updateUser);
  *   delete:
  *     summary: Delete a user
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -165,6 +174,6 @@ router.put('/:id', userController.updateUser);
  *       404:
  *         description: User not found
  */
-router.delete('/:id', userController.deleteUser);
+router.delete('/:id', authenticate, authorization(['admin']), userController.deleteUser);
 
 module.exports = router;
