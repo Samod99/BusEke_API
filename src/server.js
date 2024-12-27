@@ -8,6 +8,7 @@ const routeRoutes = require('./routes/routeRoutes');
 const busRoutes = require('./routes/busRoutes');
 const authRoutes = require('./routes/authRoutes');
 const timetableRoutes = require('./routes/timetableRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 const swaggerSetup = require('./swagger');
 
 app.get('/', (req, res) => {
@@ -22,6 +23,7 @@ app.use('/api/routes', routeRoutes);
 app.use('/api/buses', busRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/timetables', timetableRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 // app.post('/user', async(req, res) => {
 //     try {
