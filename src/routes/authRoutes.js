@@ -1,6 +1,8 @@
 const express = require('express');
 const authController = require('../controllers/authController');
 const router = express.Router();
+const validate = require('../middleware/validationMiddleware');
+const { loginSchema } = require('../validators/authValidator');
 
 /**
  * @swagger
@@ -67,6 +69,6 @@ const router = express.Router();
  *                 error:
  *                   type: string
  */
-router.post('/login', authController.loginUser);
+router.post('/login', validate(loginSchema), authController.loginUser);
 
 module.exports = router;
