@@ -2,6 +2,8 @@ const express = require('express');
 const busController = require('../controllers/busController');
 const router = express.Router();
 const { authenticate, authorization } = require('../middleware/authMiddleware');
+const validate = require('../middleware/validationMiddleware');
+const { createBusSchema, updateBusSchema } = require('../validators/busValidator');
 
 /**
  * @swagger
@@ -56,7 +58,7 @@ const { authenticate, authorization } = require('../middleware/authMiddleware');
  *       500:
  *         description: Internal server error
  */
-router.post('/', authenticate, authorization(['operator']), busController.createBus);
+router.post('/', authenticate, authorization(['operator']), validate(createBusSchema), busController.createBus);
 
 /**
  * @swagger
@@ -172,7 +174,7 @@ router.get('/:busId', busController.getBusById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', authenticate, authorization(['operator']), busController.updateBus);
+router.put('/:id', authenticate, authorization(['operator']), validate(updateBusSchema), busController.updateBus);
 
 /**
  * @swagger

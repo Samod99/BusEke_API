@@ -2,6 +2,8 @@ const express = require('express');
 const routeController = require('../controllers/routeController');
 const router = express.Router();
 const { authenticate, authorization } = require('../middleware/authMiddleware');
+const validate = require('../middleware/validationMiddleware');
+const { createRouteSchema, updateRouteSchema } = require('../validators/routeValidator');
 
 /**
  * @swagger
@@ -100,7 +102,7 @@ router.get('/', routeController.searchRoutes);
  *       500:
  *         description: Internal server error
  */
-router.post('/', authenticate, authorization(['admin']), routeController.createRoute);
+router.post('/', authenticate, authorization(['admin']), validate(createRouteSchema), routeController.createRoute);
 
 /**
  * @swagger
@@ -171,7 +173,7 @@ router.get('/:routeId', routeController.getRouteById);
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', authenticate, authorization(['admin']), routeController.updateRoute);
+router.put('/:id', authenticate, authorization(['admin']), validate(updateRouteSchema), routeController.updateRoute);
 
 /**
  * @swagger

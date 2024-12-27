@@ -2,6 +2,8 @@ const express = require('express');
 const userController = require('../controllers/userController');
 const router = express.Router();
 const { authenticate, authorization } = require('../middleware/authMiddleware');
+const validate = require('../middleware/validationMiddleware');
+const { createUserSchema, updateUserSchema } = require('../validators/userValidators');
 
 /**
  * @swagger
@@ -47,7 +49,7 @@ const { authenticate, authorization } = require('../middleware/authMiddleware');
  *       409:
  *         description: User already exists
  */
-router.post('/', userController.registerUser);
+router.post('/', validate(createUserSchema), userController.registerUser);
 
 /**
  * @swagger
@@ -151,7 +153,7 @@ router.get('/:userId', authenticate, authorization(['admin']), userController.ge
  *       404:
  *         description: User not found
  */
-router.put('/:id', authenticate, authorization(['admin']), userController.updateUser);
+router.put('/:id', authenticate, authorization(['admin']), validate(updateUserSchema), userController.updateUser);
 
 /**
  * @swagger
