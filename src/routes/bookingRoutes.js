@@ -2,6 +2,8 @@ const express = require('express');
 const bookingController = require('../controllers/bookingController');
 const { authenticate, authorization } = require('../middleware/authMiddleware');
 const router = express.Router();
+const validate = require('../middleware/validationMiddleware');
+const { createBookingSchema, updateBookingSchema } = require('../validators/bookingValidator');
 
 /**
  * @swagger
@@ -63,14 +65,10 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Booking created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Booking'
  *       400:
  *         description: Bad request
  */
-router.post('/', bookingController.createBooking);
+router.post('/', validate(createBookingSchema), bookingController.createBooking);
 
 /**
  * @swagger
@@ -81,16 +79,10 @@ router.post('/', bookingController.createBooking);
  *     responses:
  *       200:
  *         description: A list of bookings
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Booking'
  *       500:
  *         description: Internal server error
  */
-router.get('/', bookingController.getBookings);
+router.get('/', authenticate, authorization(['admin']), bookingController.getBookings);
 
 /**
  * @swagger
@@ -108,10 +100,6 @@ router.get('/', bookingController.getBookings);
  *     responses:
  *       200:
  *         description: The requested booking
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Booking'
  *       404:
  *         description: Booking not found
  *       500:
@@ -181,7 +169,7 @@ router.get('/:id', bookingController.getBookingById);
  *       400:
  *         description: Bad request
  */
-router.put('/:id', bookingController.updateBooking);
+router.put('/:id', validate(updateBookingSchema), bookingController.updateBooking);
 
 /**
  * @swagger

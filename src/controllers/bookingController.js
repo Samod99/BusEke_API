@@ -1,17 +1,15 @@
 const Booking = require('../models/Booking');
 
-// Create a new booking
 exports.createBooking = async (req, res) => {
-    try {
-        const booking = new Booking(req.body);
-        await booking.save();
-        res.status(201).json({ message: 'Booking created successfully', booking });
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+  try {
+      const booking = new Booking(req.body);
+      await booking.save();
+      res.status(201).json({ message: 'Booking created successfully', booking });
+  } catch (error) {
+      res.status(400).json({ message: error.message });
+  }
 };
 
-// Get all bookings
 exports.getBookings = async (req, res) => {
     try {
         const bookings = await Booking.find();
@@ -21,7 +19,6 @@ exports.getBookings = async (req, res) => {
     }
 };
 
-// Get a single booking by ID
 exports.getBookingById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -33,7 +30,6 @@ exports.getBookingById = async (req, res) => {
     }
 };
 
-// Update a booking
 exports.updateBooking = async (req, res) => {
     try {
         const { id } = req.params;
@@ -45,7 +41,6 @@ exports.updateBooking = async (req, res) => {
     }
 };
 
-// Delete a booking
 exports.deleteBooking = async (req, res) => {
     try {
         const { id } = req.params;
