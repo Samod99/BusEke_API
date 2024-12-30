@@ -5,7 +5,7 @@ const createBusSchema = Joi.object({
   capacity: Joi.number().required(),
   routeId: Joi.string().required(),
   operatorId: Joi.string().required(),
-  seatCount: Joi.number(),
+  seatCount: Joi.number().required(),
   ownershipType: Joi.string().valid('SLTB', 'PRIVATE').required(),
 });
 

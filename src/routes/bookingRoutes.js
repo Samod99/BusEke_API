@@ -68,21 +68,104 @@ const { createBookingSchema, updateBookingSchema } = require('../validators/book
  *       400:
  *         description: Bad request
  */
-router.post('/', validate(createBookingSchema), bookingController.createBooking);
+router.post('/', bookingController.createBooking); 
 
 /**
  * @swagger
  * /bookings:
  *   get:
  *     summary: Get all bookings
- *     tags: [Bookings]
+ *     tags: 
+ *       - Bookings
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: busNumber
+ *         schema:
+ *           type: string
+ *         description: Filter bookings by bus number
+ *       - in: query
+ *         name: passengerIDNo
+ *         schema:
+ *           type: string
+ *         description: Filter bookings by passenger ID number
+ *       - in: query
+ *         name: bookingIdentificationCode
+ *         schema:
+ *           type: string
+ *         description: Filter bookings by booking identification code
+ *       - in: query
+ *         name: date
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Filter bookings by date (YYYY-MM-DD)
  *     responses:
  *       200:
  *         description: A list of bookings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 count:
+ *                   type: integer
+ *                   description: Total number of bookings retrieved
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       busNumber:
+ *                         type: string
+ *                       passengerName:
+ *                         type: string
+ *                       passengerIDNo:
+ *                         type: string
+ *                       passengerMobile:
+ *                         type: string
+ *                       startLocation:
+ *                         type: string
+ *                       endLocation:
+ *                         type: string
+ *                       seatCount:
+ *                         type: integer
+ *                       date:
+ *                         type: string
+ *                         format: date
+ *                       time:
+ *                         type: string
+ *                         format: date-time
+ *                       price:
+ *                         type: number
+ *                       isPaid:
+ *                         type: boolean
+ *                       isCancelled:
+ *                         type: boolean
+ *                       isUsed:
+ *                         type: boolean
+ *                       isActive:
+ *                         type: boolean
+ *                       bookingIdentificationCode:
+ *                         type: string
  *       500:
  *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
  */
-router.get('/', authenticate, authorization(['admin']), bookingController.getBookings);
+router.get('/', authenticate, authorization(['operator']), bookingController.getBookings); 
 
 /**
  * @swagger
@@ -113,6 +196,8 @@ router.get('/:id', bookingController.getBookingById);
  *   put:
  *     summary: Update a booking
  *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -169,7 +254,7 @@ router.get('/:id', bookingController.getBookingById);
  *       400:
  *         description: Bad request
  */
-router.put('/:id', validate(updateBookingSchema), bookingController.updateBooking);
+router.put('/:id', authenticate, authorization(['operator']), bookingController.updateBooking); 
 
 /**
  * @swagger
@@ -177,6 +262,8 @@ router.put('/:id', validate(updateBookingSchema), bookingController.updateBookin
  *   delete:
  *     summary: Delete a booking
  *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: id
  *         in: path
@@ -192,7 +279,7 @@ router.put('/:id', validate(updateBookingSchema), bookingController.updateBookin
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', bookingController.deleteBooking);
+router.delete('/:id', authenticate, authorization(['operator']), bookingController.deleteBooking);
 
 module.exports = router;
 

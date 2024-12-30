@@ -1,14 +1,17 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
+
+const timeValidator = {
+    validator: function(v) {
+        return /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(v);  
+    },
+    message: props => `${props.value} is not a valid time! Use format HH:MM`
+};
 
 const bookingSchema = mongoose.Schema(
     {
-        bookingNumber: {
-            type: Number,
-            required: true
-        },
-        bus: { 
-            type: mongoose.Schema.Types.ObjectId, 
-            ref: 'Bus', 
+        busNumber: { 
+            type: String, 
             required: true 
         },
         passengerName: { 
@@ -40,8 +43,9 @@ const bookingSchema = mongoose.Schema(
             required: true 
         },
         time: { 
-            type: Date, 
-            required: true 
+            type: String, 
+            required: true, 
+            validate: timeValidator
         },
         price: { 
             type: Number, 
@@ -69,6 +73,8 @@ const bookingSchema = mongoose.Schema(
         },
     }
 ); 
+
+bookingSchema.plugin(AutoIncrement, { inc_field: 'bookingNumber' });
 
 const Booking = mongoose.model('Booking', bookingSchema);
 

@@ -22,7 +22,8 @@ const busSchema = mongoose.Schema(
             required: true 
         },
         seatCount: {
-            type: Number
+            type: Number, 
+            required: true
         },
         ownershipType: { 
             type: String, 

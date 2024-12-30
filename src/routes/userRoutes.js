@@ -117,7 +117,7 @@ router.get('/', authenticate, authorization(['admin']), userController.searchUse
  *       404:
  *         description: User not found
  */
-router.get('/:userId', authenticate, authorization(['admin']), userController.getUserById);
+router.get('/:userId', authenticate, authorization(['admin', 'operator']), userController.getUserById);
 
 /**
  * @swagger
