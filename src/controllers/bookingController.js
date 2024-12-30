@@ -2,21 +2,79 @@ const Booking = require('../models/Booking');
 
 exports.createBooking = async (req, res) => {
   try {
-      const booking = new Booking(req.body);
-      await booking.save();
-      res.status(201).json({ message: 'Booking created successfully', booking });
+    const {
+      busNumber,
+      passengerName,
+      passengerIDNo,
+      passengerMobile,
+      startLocation,
+      endLocation,
+      seatCount,
+      date,
+      time
+    } = req.body;
+
+    const price = seatCount * 100;
+
+    const timestamp = new Date().getTime();
+    const bookingIdentificationCode = `${busNumber}-${new Date(date).toISOString().split('T')[0]}-${timestamp}`;
+
+    const bookingData = {
+      busNumber,
+      passengerName,
+      passengerIDNo,
+      passengerMobile,
+      startLocation,
+      endLocation,
+      seatCount,
+      date,
+      time,
+      price,
+      isPaid: false, 
+      isCancelled: false, 
+      isUsed: false, 
+      isActive: true, 
+      bookingIdentificationCode
+    };
+    
+    const booking = new Booking(bookingData);
+    await booking.save();
+
+    res.status(201).json({
+      message: 'Booking created successfully',
+      booking
+    });
   } catch (error) {
-      res.status(400).json({ message: error.message });
+    res.status(400).json({ message: error.message });
   }
 };
 
 exports.getBookings = async (req, res) => {
-    try {
-        const bookings = await Booking.find();
-        res.status(200).json(bookings);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+  try {
+    const filter = {};
+    
+    if (req.query.busNumber && req.query.busNumber.trim()) {
+      filter.busNumber = req.query.busNumber.trim();
     }
+    if (req.query.passengerIDNo && req.query.passengerIDNo.trim()) {
+      filter.passengerIDNo = req.query.passengerIDNo.trim();
+    }
+    if (req.query.bookingIdentificationCode && req.query.bookingIdentificationCode.trim()) {
+      filter.bookingIdentificationCode = req.query.bookingIdentificationCode.trim();
+    }
+    if (req.query.date && req.query.date.trim()) {
+      const queryDate = new Date(req.query.date.trim()).toISOString().split('T')[0];
+      filter.date = queryDate;
+    }
+
+    const bookings = await Booking.find(filter);
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ 
+      success: false,
+      message: error.message 
+    });
+  }
 };
 
 exports.getBookingById = async (req, res) => {

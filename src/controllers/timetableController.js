@@ -30,7 +30,10 @@ exports.createTimetable = async (req, res) => {
 
 exports.getTimetables = async (req, res) => {
     try {
-        const headers = await TimetableHeader.find()
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const headers = await TimetableHeader.find({ validTo: { $gte: today } })
             .populate({ path: 'route', model: 'Route' }) 
             .populate({ path: 'creater', model: 'User' }) 
             .lean(); 
@@ -114,76 +117,3 @@ exports.deleteTimetable = async (req, res) => {
     }
 };
 
-
-
-
-// exports.getTimetables = async (req, res) => {
-//     try {
-//         const filter = {};
-//         if (req.query.route && req.query.route.trim()) filter.route = req.query.route.trim();
-//         if (req.query.creater && req.query.creater.trim()) filter.creater = req.query.creater.trim();
-//         if (req.query.validFrom) filter.validFrom = { $gte: new Date(req.query.validFrom) };
-//         if (req.query.validTo) filter.validTo = { $lte: new Date(req.query.validTo) };
-//         if (req.query.isActive !== undefined) filter.isActive = req.query.isActive === 'true';
-
-//         const timetables = await TimetableHeader.find(filter)
-//             .populate('route creater')
-//             .populate({
-//                 path: '_id',
-//                 model: 'TimetableBody',
-//                 populate: { path: 'bus', model: 'Bus' },
-//             });
-
-//         res.status(200).json(timetables);
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-// };
-
-// exports.getTimetables = async (req, res) => {
-//     try {
-//         const filter = {};
-
-//         if (req.query.route && req.query.route.trim()) filter.route = req.query.route.trim();
-//         if (req.query.creater && req.query.creater.trim()) filter.creater = req.query.creater.trim();
-//         if (req.query.validFrom) filter.validFrom = { $gte: new Date(req.query.validFrom) };
-//         if (req.query.validTo) filter.validTo = { $lte: new Date(req.query.validTo) };
-//         if (req.query.isActive !== undefined) filter.isActive = req.query.isActive === 'true';
-
-//         const bodyFilter = {};
-//         if (req.query.departureLocation && req.query.departureLocation.trim())
-//             bodyFilter.departureLocation = req.query.departureLocation.trim();
-//         if (req.query.arrivalLocation && req.query.arrivalLocation.trim())
-//             bodyFilter.arrivalLocation = req.query.arrivalLocation.trim();
-
-//         const timetables = await TimetableHeader.aggregate([
-//             { $match: filter }, 
-//             {
-//                 $lookup: {
-//                     from: 'timetablebodies', 
-//                     localField: '_id',
-//                     foreignField: 'headerId',
-//                     as: 'details',
-//                 },
-//             },
-//             { $unwind: '$details' }, 
-//             { $match: bodyFilter }, 
-//             {
-//                 $group: {
-//                     _id: '$_id',
-//                     route: { $first: '$route' },
-//                     creater: { $first: '$creater' },
-//                     validFrom: { $first: '$validFrom' },
-//                     validTo: { $first: '$validTo' },
-//                     isActive: { $first: '$isActive' },
-//                     createdAt: { $first: '$createdAt' },
-//                     details: { $push: '$details' },
-//                 },
-//             },
-//         ]);
-
-//         res.status(200).json(timetables);
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-// };
