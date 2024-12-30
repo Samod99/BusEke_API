@@ -11,6 +11,7 @@ const authRoutes = require('./routes/authRoutes');
 const timetableRoutes = require('./routes/timetableRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const swaggerSetup = require('./swagger');
+const port = process.env.PORT || 4000;
 
 app.get('/', (req, res) => {
     res.send('Welcome to BusEke API')
@@ -32,8 +33,8 @@ swaggerSetup(app);
 mongoose.connect(process.env.MONGO_DB_URI)
 .then(() => {
     console.log('successfully connected')
-    app.listen(5000, () => {
-        console.log(`API is running on http://localhost:5000`);
+    app.listen(port, () => {
+        console.log(`API is running on http://localhost:${port}`);
         console.log(`Swagger Documentataion running on http://localhost:5000/api-docs`);
     });
 }).catch((error) => {
